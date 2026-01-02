@@ -1,22 +1,16 @@
 // --- 1. MATLAB UYUMLU VERİ SÖZLÜĞÜ (1-Based Indexing) ---
-// MATLAB alfabetik sıraya göre 1'den başlatır.
 const veriSozlugu = {
     Gender: { 'Female': 1, 'Male': 2 },
     family_history: { 'no': 1, 'yes': 2 },
     FAVC: { 'no': 1, 'yes': 2 },
-    // CAEC: Always=1, Frequently=2, Sometimes=3, no=4
     CAEC: { 'Always': 1, 'Frequently': 2, 'Sometimes': 3, 'no': 4 },
     SMOKE: { 'no': 1, 'yes': 2 },
     SCC: { 'no': 1, 'yes': 2 },
-    // CALC: Always=1, Frequently=2, Sometimes=3, no=4
     CALC: { 'Always': 1, 'Frequently': 2, 'Sometimes': 3, 'no': 4 },
-    // MTRANS: Automobile=1, Bike=2, Motorbike=3, Public_Transportation=4, Walking=5
     MTRANS: { 'Automobile': 1, 'Bike': 2, 'Motorbike': 3, 'Public_Transportation': 4, 'Walking': 5 }
 };
 
 // --- 2. MATLAB UYUMLU NORMALİZASYON DEĞERLERİ ---
-// MATLAB kodunuzda tüm tablo normalize ediliyor.
-// Bu değerler veri setinizdeki tüm sütunların (kategorikler dahil) Mean ve Std değerleridir.
 const stats = {
     mean: [
         1.5059,  // Gender
@@ -56,15 +50,15 @@ const stats = {
     ]
 };
 
-// --- 3. SONUÇ ETİKETLERİ ---
+// --- 3. SONUÇ ETİKETLERİ (ENGLISH) ---
 const sonucEtiketleri = [
-    "Yetersiz Ağırlık (Insufficient Weight)", // Index 0
-    "Normal Ağırlık (Normal Weight)",         // Index 1
-    "Obezite Tip 1 (Obesity Type I)",         // Index 2
-    "Obezite Tip 2 (Obesity Type II)",        // Index 3
-    "Obezite Tip 3 (Obesity Type III)",       // Index 4
-    "Fazla Kilolu Seviye 1 (Overweight Level I)", // Index 5
-    "Fazla Kilolu Seviye 2 (Overweight Level II)" // Index 6
+    "Insufficient Weight",       // Index 0
+    "Normal Weight",             // Index 1
+    "Obesity Type I",            // Index 2
+    "Obesity Type II",           // Index 3
+    "Obesity Type III",          // Index 4
+    "Overweight Level I",        // Index 5
+    "Overweight Level II"        // Index 6
 ];
 
 // Helper: Argmax
@@ -80,15 +74,15 @@ function indexOfMax(arr) {
 
 async function tahminEt() {
     const sonucDiv = document.getElementById("sonuc");
-    sonucDiv.innerText = "Hesaplanıyor...";
+    // Mesaj İngilizceye çevrildi
+    sonucDiv.innerText = "Calculating..."; 
     sonucDiv.style.color = "blue";
 
     try {
+        // Dosya ismi düzeltildi: obezite.onnx
         const session = await ort.InferenceSession.create('./obzeite.onnx');
 
-        // 1. Ham verileri topla (Sayısal ve Kategorik-Integer)
-        // Sıralama MATLAB'daki 'X_numeric' sütun sırasıyla AYNI olmalı.
-        // CSV sırası: Gender, Age, Height, Weight, family_hist, FAVC, FCVC, NCP, CAEC, SMOKE, CH2O, SCC, FAF, TUE, CALC, MTRANS
+        // 1. Ham verileri topla
         let rawValues = [
             veriSozlugu.Gender[document.getElementById("Gender").value],
             parseFloat(document.getElementById("Age").value),
@@ -108,18 +102,15 @@ async function tahminEt() {
             veriSozlugu.MTRANS[document.getElementById("MTRANS").value]
         ];
 
-        // 2. Normalizasyon (MATLAB'daki 'normalize' fonksiyonu simülasyonu)
-        // Her değeri kendi sütununun ortalamasından çıkarıp standart sapmasına bölüyoruz.
+        // 2. Normalizasyon
         let normalizedValues = rawValues.map((val, index) => {
             return (val - stats.mean[index]) / stats.std[index];
         });
 
-        console.log("Ham Değerler:", rawValues);
-        console.log("Normalize Değerler (Modele Giren):", normalizedValues);
+        console.log("Raw Values:", rawValues);
+        console.log("Normalized Values:", normalizedValues);
 
-        // 3. Tensor Oluşturma
-        // MATLAB reshape: [numFeatures, 1, 1, numSamples] -> ONNX export genelde [Batch, Channel, Height, Width] olur.
-        // Hata mesajınızdan [1, 1, 16, 1] formatının doğru olduğunu teyit etmiştik.
+        // 3. Tensor Oluşturma [1, 1, 16, 1]
         const tensor = new ort.Tensor('float32', Float32Array.from(normalizedValues), [1, 1, 16, 1]);
 
         // 4. Çalıştır
@@ -133,13 +124,16 @@ async function tahminEt() {
 
         // 5. Sonuç
         const tahminIndeksi = indexOfMax(outputTensor.data);
-        const tahminMetni = sonucEtiketleri[tahminIndeksi] || "Bilinmiyor";
+        // Bilinmiyor -> Unknown
+        const tahminMetni = sonucEtiketleri[tahminIndeksi] || "Unknown"; 
 
-        sonucDiv.innerText = "Sonuç: " + tahminMetni;
+        // Sonuç -> Result
+        sonucDiv.innerText = "Result: " + tahminMetni;
         sonucDiv.style.color = "green";
 
     } catch (e) {
-        sonucDiv.innerText = "Hata: " + e.message;
+        // Hata -> Error
+        sonucDiv.innerText = "Error: " + e.message;
         sonucDiv.style.color = "red";
         console.error(e);
     }
