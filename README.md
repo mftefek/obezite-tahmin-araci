@@ -18,5 +18,5 @@ Bu web uygulaması, 1D Convolutional Neural Network (CNN) modeli kullanarak obez
 
 1. Bu repoyu klonlayın:
 ```bash
-git clone https://github.com/[kullanıcı-adınız]/obesity-predictor.git
-cd obesity-predictor
+git clone https://github.com/mftefek/obezite-tahmin-araci.git
+cd obezite-tahmin-araci
