@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obezite Tahmin Uygulaması</title>
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        select, input { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #sonuc { margin-top: 20px; font-size: 1.2em; font-weight: bold; text-align: center; color: #333; }
+    </style>
+</head>
+<body>
+
+    <h2>Obezite Risk Tahmini</h2>
+    
+    <div id="inputs">
+        <div class="form-group"><label>Cinsiyet (Gender)</label>
+            <select id="Gender"><option value="Female">Kadın</option><option value="Male">Erkek</option></select>
+        </div>
+        <div class="form-group"><label>Yaş (Age)</label><input type="number" id="Age" value="25"></div>
+        <div class="form-group"><label>Boy (Height - m)</label><input type="number" id="Height" step="0.01" value="1.70"></div>
+        <div class="form-group"><label>Kilo (Weight - kg)</label><input type="number" id="Weight" value="70"></div>
+        <div class="form-group"><label>Ailede Obezite Geçmişi</label>
+            <select id="family_history"><option value="yes">Evet</option><option value="no">Hayır</option></select>
+        </div>
+        <div class="form-group"><label>Sık Yüksek Kalorili Beslenme (FAVC)</label>
+            <select id="FAVC"><option value="yes">Evet</option><option value="no">Hayır</option></select>
+        </div>
+        <div class="form-group"><label>Sebze Tüketim Sıklığı (FCVC - 1/2/3)</label><input type="number" id="FCVC" value="2"></div>
+        <div class="form-group"><label>Öğün Sayısı (NCP)</label><input type="number" id="NCP" value="3"></div>
+        <div class="form-group"><label>Öğün Arası Atıştırma (CAEC)</label>
+            <select id="CAEC">
+                <option value="no">Hayır</option>
+                <option value="Sometimes">Bazen</option>
+                <option value="Frequently">Sık Sık</option>
+                <option value="Always">Her Zaman</option>
+            </select>
+        </div>
+        <div class="form-group"><label>Sigara Kullanımı (SMOKE)</label>
+            <select id="SMOKE"><option value="no">Hayır</option><option value="yes">Evet</option></select>
+        </div>
+        <div class="form-group"><label>Su Tüketimi (CH2O - Litre)</label><input type="number" id="CH2O" value="2"></div>
+        <div class="form-group"><label>Kalori Takibi (SCC)</label>
+            <select id="SCC"><option value="no">Hayır</option><option value="yes">Evet</option></select>
+        </div>
+        <div class="form-group"><label>Fiziksel Aktivite Sıklığı (FAF - 0/1/2/3)</label><input type="number" id="FAF" value="1"></div>
+        <div class="form-group"><label>Teknoloji Kullanım Süresi (TUE)</label><input type="number" id="TUE" value="1"></div>
+        <div class="form-group"><label>Alkol Tüketimi (CALC)</label>
+            <select id="CALC">
+                <option value="no">Hayır</option>
+                <option value="Sometimes">Bazen</option>
+                <option value="Frequently">Sık Sık</option>
+                <option value="Always">Her Zaman</option>
+            </select>
+        </div>
+        <div class="form-group"><label>Ulaşım Şekli (MTRANS)</label>
+            <select id="MTRANS">
+                <option value="Public_Transportation">Toplu Taşıma</option>
+                <option value="Walking">Yürüyerek</option>
+                <option value="Automobile">Otomobil</option>
+                <option value="Motorbike">Motosiklet</option>
+                <option value="Bike">Bisiklet</option>
+            </select>
+        </div>
+    </div>
+
+    <button onclick="tahminEt()">Tahmin Et</button>
+    <div id="sonuc">Sonuç burada görünecek...</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
