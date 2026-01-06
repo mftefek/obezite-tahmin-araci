@@ -1,22 +1,22 @@
-# Obezite Seviyesi Tahmin Aracı
+# Obesity Level Prediction Tool
 
-Bu web uygulaması, 1D Convolutional Neural Network (CNN) modeli kullanarak obezite seviyesini tahmin eder.
+This web application predicts obesity levels using a 1D Convolutional Neural Network (CNN) model.
 
-## 🌐 Canlı Demo
-[GitHub Pages'te Görüntüle](https://[kullanıcı-adınız].github.io/obesity-predictor)
+## 🌐 Live Demo
+[View on GitHub Pages](https://[your-username].github.io/obesity-predictor)
 
-## ✨ Özellikler
-- ✅ 16 farklı özellik ile obezite seviyesi tahmini
-- ✅ 7 farklı obezite sınıfı
-- ✅ Tarayıcıda çalışan ONNX modeli
-- ✅ Veriler sunucuya gönderilmez (gizlilik)
-- ✅ Gerçek zamanlı BMI hesaplama
-- ✅ Türkçe arayüz
-- ✅ Mobil uyumlu tasarım
+## ✨ Features
+- ✅ Obesity level prediction with 16 different features
+- ✅ 7 different obesity classes
+- ✅ ONNX model running in the browser
+- ✅ Data is not sent to any server (privacy)
+- ✅ Real-time BMI calculation
+- ✅ English interface
+- ✅ Mobile-friendly design
 
-## 🚀 Kurulum
+## 🚀 Installation
 
-1. Bu repoyu klonlayın:
+1. Clone this repository:
 ```bash
-git clone https://github.com/mftefek/obezite-tahmin-araci.git
-cd obezite-tahmin-araci
+git clone https://github.com/mftefek/obesity-prediction-tool.git
+cd obesity-prediction-tool
